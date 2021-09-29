@@ -1,0 +1,7 @@
+<div class="wrap">
+  <i class="material-icons" (click)="go(-1)">arrow_left</i>
+<!--  <span> {{dateService.newDate | async |date: "yyyy  MMM" :"ru" }}</span>-->
+  <span> {{dateService.newDate | async | customDate }}</span>
+  <br>
+  <i class="material-icons" (click)="go(1)">arrow_right</i>
+</div>
