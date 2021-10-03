@@ -8,7 +8,7 @@ import {BehaviorSubject, Observable, Observer} from "rxjs";
 
 export class DateService {
   public date: BehaviorSubject<moment.Moment> = new BehaviorSubject(moment())
-  public newDate: BehaviorSubject<any> = new BehaviorSubject(new Date())
+  public newDate: BehaviorSubject<Date> = new BehaviorSubject(new Date())
   public time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => observer.next(new Date().toString()), 1000);
   });
@@ -16,9 +16,11 @@ export class DateService {
   changeMonth(dir:number){
     console.log('start newDate',new Date())
     console.log('newDate',this.newDate.value)
+    console.log('newDate',this.newDate.value.getMonth())
     let month= this.newDate.value.getMonth()
     let value = this.newDate.value.setMonth(month+(dir))
-    this.newDate.next(value.toUTCString())
+    // this.newDate.next(value.toUTCString())
+    this.newDate.next(new Date(value))
   }
   changeDate(date: any): void {
     console.log('date',date);

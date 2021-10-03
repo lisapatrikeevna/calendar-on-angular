@@ -48,7 +48,6 @@ import {CustomDatePipe} from "./shared/custom.datepipe";
     HeaderComponent,
     OrganizerComponent,
     MomentPipe,
-    CustomDatePipe,
     CustomDatePipe
   ],
   imports: [

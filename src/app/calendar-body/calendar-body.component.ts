@@ -21,12 +21,16 @@ interface Week {
 export class CalendarBodyComponent implements OnInit {
   calendar: Week[] = [];
 
-  constructor(private dateService: DateService) {}
+  constructor(private dateService: DateService) {
+    console.log('constructor newDate',dateService.newDate.value);
+  }
 
   ngOnInit() {
     // this.dateService.date.subscribe(this.generate.bind(this))
     this.dateService.newDate.subscribe(this.generate2.bind(this))
-    // this.dateService.newDate.subscribe(() => {this.generate2.bind(this)})
+    // this.dateService.newDate.subscribe((date) => {
+    //   console.log('subscribe',date);
+    //   this.generate2(date)})
   }
 
   getLastDayOfMonth(year: number, month: number) {
@@ -36,8 +40,6 @@ export class CalendarBodyComponent implements OnInit {
 
   getLastSunday(year: number, month: number) {
     let d = new Date(year, month, 0);
-    console.log(d.getDate());
-    console.log(d.getDay());
     d.setDate(d.getDate() - d.getDay());
     return d;
   }
@@ -58,7 +60,6 @@ export class CalendarBodyComponent implements OnInit {
 
   generate2(day: any) {
     let now = new Date(day.valueOf())
-    // console.log('generate now', now);
     let month = now.getMonth()
     let year = now.getUTCFullYear()
     let lastDayOfPreviousMonth = new Date(now.setDate(0));
@@ -69,12 +70,9 @@ export class CalendarBodyComponent implements OnInit {
 
     let date = 0
     let calendarDate = this.copyHandler(startDay)
-
     const calendar: any = []
     while (date <= 5) {
       date = date + 1
-      // calendarDate=this.newDay(calendarDate, +1)
-      // calendarDate = new Date(lastDayOfPreviousMonth.setDate(date))
       calendar.push({
         days: Array(7)
           .fill(0)
@@ -85,7 +83,7 @@ export class CalendarBodyComponent implements OnInit {
             lastDayOfCurrentMonth.getMonth() !== calendarDate.getMonth()  ? true: false
             const disabled = lastSundayOfPreviousMonth.getMonth() !== calendarDate.getMonth() &&
             lastDayOfCurrentMonth.getMonth() !== calendarDate.getMonth()  ? false: true
-            const selected = false
+            const selected =calendarDate.getDate()+calendarDate.getMonth()===this.copyHandler(day).getDate()+now.getMonth()+1 ? true:false
             return {
               value,active,disabled,selected
             }
@@ -101,5 +99,6 @@ export class CalendarBodyComponent implements OnInit {
 
   select(day: any) {
     this.dateService.changeDate(day)
+    // this.calendar
   }
 }

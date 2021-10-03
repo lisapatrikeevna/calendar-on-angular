@@ -1,16 +1,18 @@
 <section>
   <header>
-    Organizer: <strong>{{dateService.newDate | async | customDate }}</strong>
-    <hr />
+    Organizer: <strong>
+<!--    {{dateService.newDate | async | customDate }}-->
+        {{dateService.newDate | async | date:'yyyy.mm.dd' }}
+  </strong>
+    <hr/>
   </header>
-
   <main>
     <ul *ngIf="tasks.length; else noTasks">
       <li class="task" *ngFor="let task of tasks; let i = index">
-        <span>
-          <strong>{{i + 1}}</strong>
-          {{task.title}}
-        </span>
+            <span>
+              <strong>{{i + 1}}</strong>
+              {{task.title}}
+            </span>
         <button class="btn btn-primary" (click)="remove(task)">Remove</button>
       </li>
     </ul>
@@ -27,7 +29,8 @@
         type="submit"
         class="btn btn-primary btn-block"
         [disabled]="form.invalid"
-      >Add</button>
+      >Add
+      </button>
     </form>
   </footer>
 </section>

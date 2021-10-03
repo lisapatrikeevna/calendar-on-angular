@@ -24,7 +24,8 @@
   <td *ngFor="let day of week.days"
       [ngClass]="{active:day.active, disabled:day.disabled}"
       (click)="select(day.value)"
-      [class.disabled]="day.disabled">
+      [class.disabled]="day.disabled"
+      [class.selected]="day.selected">
     {{ day.value | date:'MMM dd' }}
     {{day.active}}
   </td>
