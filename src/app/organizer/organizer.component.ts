@@ -15,7 +15,7 @@ export class OrganizerComponent implements OnInit {
   tasks: any = []
 
   constructor(public dateService: DateService,
-              private todolistService: TodoListsService) {
+              public todolistService: TodoListsService) {
   }
 
   ngOnInit(): void {
@@ -24,21 +24,26 @@ export class OrganizerComponent implements OnInit {
     })
   }
 
-  remove(task: any) {}
+  remove(task: any) {
+    this.todolistService.removeTask(task.taskId,task.date)
+  }
+
+  update(task: any) {}
 
   submit() {
     const {title} = this.form.value
     const taskId = v1()
-    console.log('tasks',this.tasks);
-    // console.log('title',title);
     const task: Task = {
       taskId,
       title,
       date: this.dateService.newDate.value
     }
-    this.todolistService.create(task).subscribe(task => {
-      this.tasks.push(task)
+    this.tasks.push(task)
+    this.todolistService.create(task).subscribe(resTask => {
+      // this.tasks.push(task)
       this.form.reset()
+      this.todolistService.getTaskList(this.dateService.dateFormat(task.date))
     }, err => console.log(err))
+
   }
 }

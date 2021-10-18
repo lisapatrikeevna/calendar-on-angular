@@ -38,4 +38,10 @@ export class DateService {
     });
     this.date.next(value);
   }
+  dateFormat(date:any){
+    console.log(date);
+    console.log(new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0,10));
+    return new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0,10)
+    // return date.toISOString().toString().slice(0,10)
+  }
 }

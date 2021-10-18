@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {DateService} from "../shared/date.service";
+import {TodoListsService} from "../shared/todoLists.service";
 
 interface Day {
   value: any
@@ -20,17 +21,24 @@ interface Week {
 })
 export class CalendarBodyComponent implements OnInit {
   calendar: Week[] = [];
+  taskList: Task[] = []
 
-  constructor(private dateService: DateService) {
-    console.log('constructor newDate',dateService.newDate.value);
+  constructor(private dateService: DateService,
+              private todolistService: TodoListsService) {
+    console.log('constructor newDate', dateService.newDate.value);
   }
 
   ngOnInit() {
-    // this.dateService.date.subscribe(this.generate.bind(this))
     this.dateService.newDate.subscribe(this.generate2.bind(this))
     // this.dateService.newDate.subscribe((date) => {
     //   console.log('subscribe',date);
     //   this.generate2(date)})
+    this.getTasks(this.dateService.newDate.value)
+    // this.dateService.newDate.subscribe(this.getTasks.bind(this))
+    // this.dateService.newDate.subscribe((date) => {
+    //   console.log('subscribe getTasks',date);
+    //   this.getTasks(date)})
+
   }
 
   getLastDayOfMonth(year: number, month: number) {
@@ -54,11 +62,11 @@ export class CalendarBodyComponent implements OnInit {
     return new Date(d.valueOf())
   }
 
-  newDay(d: any,n:any) {
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate() +n)
+  newDay(d: any, n: any) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n)
   }
 
-  generate2(day: any) {
+  generate2(day: Date) {
     let now = new Date(day.valueOf())
     let month = now.getMonth()
     let year = now.getUTCFullYear()
@@ -66,7 +74,7 @@ export class CalendarBodyComponent implements OnInit {
     let lastSundayOfPreviousMonth = this.getLastSunday(year, month)
     let firstSaturdayOfNextMonth = this.getLastSaturday(year, month + 2);
     let lastDayOfCurrentMonth = this.getLastDayOfMonth(year, month + 1);
-    let startDay = this.newDay(lastSundayOfPreviousMonth,-1)
+    let startDay = this.newDay(lastSundayOfPreviousMonth, -1)
 
     let date = 0
     let calendarDate = this.copyHandler(startDay)
@@ -77,15 +85,15 @@ export class CalendarBodyComponent implements OnInit {
         days: Array(7)
           .fill(0)
           .map(() => {
-            calendarDate=this.newDay(calendarDate, +1)
+            calendarDate = this.newDay(calendarDate, +1)
             const value = calendarDate
             let active = lastSundayOfPreviousMonth.getMonth() !== calendarDate.getMonth() &&
-            lastDayOfCurrentMonth.getMonth() !== calendarDate.getMonth()  ? true: false
+            lastDayOfCurrentMonth.getMonth() !== calendarDate.getMonth() ? true : false
             const disabled = lastSundayOfPreviousMonth.getMonth() !== calendarDate.getMonth() &&
-            lastDayOfCurrentMonth.getMonth() !== calendarDate.getMonth()  ? false: true
-            const selected =calendarDate.getDate()+calendarDate.getMonth()===this.copyHandler(day).getDate()+now.getMonth()+1 ? true:false
+            lastDayOfCurrentMonth.getMonth() !== calendarDate.getMonth() ? false : true
+            const selected = calendarDate.getDate() + calendarDate.getMonth() === this.copyHandler(day).getDate() + now.getMonth() + 1 ? true : false
             return {
-              value,active,disabled,selected
+              value, active, disabled, selected
             }
           })
       })
@@ -95,10 +103,12 @@ export class CalendarBodyComponent implements OnInit {
     this.calendar = calendar
   }
 
-
-
   select(day: any) {
     this.dateService.changeDate(day)
-    // this.calendar
+    this.getTasks(day)
+  }
+
+  getTasks(date: any) {
+    this.todolistService.getTaskList(this.dateService.dateFormat(date))
   }
 }

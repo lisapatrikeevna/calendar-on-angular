@@ -7,13 +7,17 @@
     <hr/>
   </header>
   <main>
-    <ul *ngIf="tasks.length; else noTasks">
-      <li class="task" *ngFor="let task of tasks; let i = index">
+<!--    <ul *ngIf="tasks.length; else noTasks">-->
+    <ul *ngIf="todolistService.taskList; else noTasks">
+<!--      <pre>{{todolistService.taskList |async}}</pre>-->
+<!--      <li class="task" *ngFor="let task of tasks; let i = index">-->
+      <li class="task" *ngFor="let task of todolistService.taskList |async ; let i = index">
             <span>
               <strong>{{i + 1}}</strong>
               {{task.title}}
             </span>
         <button class="btn btn-primary" (click)="remove(task)">Remove</button>
+        <button class="btn btn-primary" (click)="update(task)">Update</button>
       </li>
     </ul>
     <ng-template #noTasks>
@@ -31,6 +35,7 @@
         [disabled]="form.invalid"
       >Add
       </button>
+
     </form>
   </footer>
 </section>
