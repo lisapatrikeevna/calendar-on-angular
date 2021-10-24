@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {DateService} from "./date.service";
 
 export interface Task {
+  _id?:string
   taskId: string
   title: string
   date: Date
@@ -19,7 +20,7 @@ export interface Task {
 
 export class TodoListsService {
   static url = 'http://localhost:5100/Todolist'
-  public taskList: BehaviorSubject<any> = new BehaviorSubject<any>([])
+  public taskList: BehaviorSubject<Task[]> = new BehaviorSubject<any>([])
 
   constructor(private http: HttpClient,
               private dateService: DateService) {
@@ -44,19 +45,21 @@ export class TodoListsService {
     //date=month&year
     this.http.get(`${TodoListsService.url}/${date}/getTasks`).subscribe(
       (res: any) => {
+        console.log('res getTaskList',res);
         this.taskList.next(res.allTasks)
       }
     )
   }
 
-  removeTask(tId: string,date:string) {
-    console.log('removeTask s',tId);
-    this.http.delete(`${TodoListsService.url}/tId/removeTask`)
-    this.getTaskList(this.dateService.dateFormat(date))
+  removeTask(tId: string) {
+    return this.http.delete(`${TodoListsService.url}/${tId}/removeTask`)
   }
 
   create(task: Task) {
     // return this.http.post(`${TodoListsService.url}/${task.date}`,task)
     return this.http.post(`${TodoListsService.url}/${task.taskId}/addTask`, task)
+  }
+  update(task: Task) {
+    return this.http.put(`${TodoListsService.url}/${task._id}/updateTask`, task)
   }
 }

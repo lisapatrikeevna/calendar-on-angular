@@ -1,23 +1,35 @@
 <section>
   <header>
     Organizer: <strong>
-<!--    {{dateService.newDate | async | customDate }}-->
-        {{dateService.newDate | async | date:'yyyy.mm.dd' }}
+    <!--    {{dateService.newDate | async | customDate }}-->
+    {{dateService.newDate | async | date:'yyyy.mm.dd' }}
   </strong>
     <hr/>
   </header>
   <main>
-<!--    <ul *ngIf="tasks.length; else noTasks">-->
-    <ul *ngIf="todolistService.taskList; else noTasks">
-<!--      <pre>{{todolistService.taskList |async}}</pre>-->
-<!--      <li class="task" *ngFor="let task of tasks; let i = index">-->
+    <!--    <ul *ngIf="tasks.length; else noTasks">-->
+    <ul *ngIf="todolistService.taskList.value.length ; else noTasks">
+      <!--      <pre>{{todolistService.taskList |async}}</pre>-->
+      <!--      <li class="task" *ngFor="let task of tasks; let i = index">-->
       <li class="task" *ngFor="let task of todolistService.taskList |async ; let i = index">
-            <span>
+        <div *ngIf="!updateTask; else updateT">
+           <span>
               <strong>{{i + 1}}</strong>
-              {{task.title}}
+             {{task.title}}
             </span>
-        <button class="btn btn-primary" (click)="remove(task)">Remove</button>
-        <button class="btn btn-primary" (click)="update(task)">Update</button>
+          <button class="btn btn-primary" (click)="remove(task)">Remove</button>
+          <button class="btn btn-primary" (click)="change(task)">Change</button>
+        </div>
+        <ng-template #updateT>
+          <form (ngSubmit)="update(task)" [formGroup]="foolForm">
+            <input type="checkbox" formControlName="completed">
+            <input type="text" formControlName="title">
+            <!--              <input type="text" formControlName="title" [ngModel]="task.title">-->
+            <input type="text" formControlName="description">
+            <button class="btn btn-primary" (click)="update(task)">Update</button>
+            <button class="btn btn-primary" (click)="back(task)">Back</button>
+          </form>
+        </ng-template>
       </li>
     </ul>
     <ng-template #noTasks>
@@ -28,7 +40,6 @@
   <footer>
     <form (ngSubmit)="submit()" [formGroup]="form">
       <input type="text" formControlName="title">
-
       <button
         type="submit"
         class="btn btn-primary btn-block"
